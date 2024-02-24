@@ -120,7 +120,13 @@ class ImageSizeGetter {
       }
     }
 
-    throw UnsupportedError('The input is not supported.');
+    // https://github.com/CaiJingLong/dart_image_size_getter/issues/36
+    // Sometimes JpegDecoder().isValid() returns false while it should not.
+    // So at this stage (= already about to raise an error),
+    // forcing a decoding assuming Jpeg file cannot hurt.
+    // The caller should be prepared to handle any error anyway.
+    return JpegDecoder().getSize(input);
+    // throw UnsupportedError('The input is not supported.');
   }
 
   /// {@macro image_size_getter.getSize}
